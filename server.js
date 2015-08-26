@@ -1,13 +1,31 @@
 var config  = require('./config');
 var express = require('express');
 var bodyParser = require('body-parser');
+var ipfs = require('./ipfs');
 
 
 var app  = express();
 
-app.get( config.api_base + 'thread',  require('./handlers/thread_get'));
-app.post(config.api_base + 'thread',  require('./handlers/thread_post'));
-app.post(config.api_base + 'comment', require('./handlers/comment'));
+app.get(config.api_base + 'thread', function(req, res) {
+  ipfs.get_thread_addr(
+      req.body.dht_prefix,
+      req.body.thread_id,
+      function(err, multihash) {
+        if (err) {
+          return res.status(500).send({error: err});
+        }
+        return res.json({'Hash': multihash});
+      }
+  );
+})
+
+app.post(config.api_base + 'thread', function(req, res) {
+
+})
+
+app.post(config.api_base + 'comment', function(req, res) {
+
+})
 
 
 
