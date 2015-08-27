@@ -24,9 +24,9 @@ var async = require('async');
         api.dht.put(key, res[0].Hash, cb);
       },
       // test DHT get
-      function(res, cb) {
-        api.dht.get(key, cb);
-      }
+      //function(res, cb) {
+      //  api.dht.get(key, cb);
+      //}
     ], function(err, res) {
       callback(err, data);
     });
