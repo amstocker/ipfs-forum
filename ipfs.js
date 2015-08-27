@@ -1,6 +1,8 @@
 var config = require('./config');
 var ipfsAPI = require('ipfs-api');
 var uuid = require('uuid');
+var async = require('async');
+
 
 (function(ipfs) {
 
@@ -15,14 +17,11 @@ var uuid = require('uuid');
     async.waterfall([
       // insert IPFS object
       function(cb) {
-        var obj = new Buffer(JSON.stringify({
-          'Data': data
-        }));
-        api.object.put(obj, 'json', cb);
+        api.add(new Buffer(JSON.stringify(data)), cb);
       },
       // set current head pointer in DHT
       function(res, cb) {
-        api.dht.put(key, res.Hash, cb);
+        api.dht.put(key, res[0].Hash, cb);
       },
       // test DHT get
       function(res, cb) {
@@ -34,11 +33,11 @@ var uuid = require('uuid');
   }
 
 
-  ipfs.new_thread(prefix, thread, callback) {
+  ipfs.new_thread = function(prefix, thread, callback) {
     // id which will use to store current head pointer in the DHT
     var id = uuid.v4();
     // use prefix for DHT key in order to not pollute
-    var dht_key = dht_key(prefix, id);
+    var key = dht_key(prefix, id);
 
     var now = new Date().getTime()/1000;
     var data = {
@@ -51,21 +50,20 @@ var uuid = require('uuid');
       'comments': []
     };
 
-    add(dht_key, data, callback);
+    add(key, data, callback);
   }
 
 
-  ipfs.get_thread_addr(prefix, thread_id, callback) {
+  ipfs.get_thread_addr = function(prefix, thread_id, callback) {
     // attempt to get current head from DHT
     api.dht.get(dht_key(prefix, thread_id), callback);
   }
 
 
-  ipfs.append_comment(prefix, thread_id, comment, callback) { 
+  ipfs.append_comment = function(prefix, thread_id, comment, callback) { 
     var now = new Date().getTime()/1000;
-    var dht_key = dht_key(prefix, thread_id);
+    var key = dht_key(prefix, thread_id);
     var comment_data = {
-      'thread_id': thread_id,
       'created_utc': now,
       'content': comment.content
     };
@@ -76,11 +74,19 @@ var uuid = require('uuid');
         api.dht.get(dht_key, cb);
       },
       function(res, cb) {
-        api.object.get(res, cb);
+        api.cat([res], function(err, res) {
+          if (err || !res) {
+            return cb(err, null);
+          }
+          if (res.readable) {
+            return handle_stream(res, cb);
+          } else {
+            return cb(null, res);
+          }
+        });
       },
-      function(res, cb) {
+      function(thread, cb) {
         try {
-          var thread = JSON.parse(res).Data;
           thread.comments.push(comment_data);
           thread.latest = now;
           cb(null, thread);
@@ -90,10 +96,20 @@ var uuid = require('uuid');
         }
       },
       function(res, cb) {
-        add(dht_key, res, cb);
+        add(key, res, cb);
       }
     ], function(err, res) {
       return callback(err, comment_data);
+    });
+  }
+
+  function handle_stream(stream, callback) {
+    var res = [];
+    stream.on('data', function(buffer) {
+      res.push(JSON.parse(buffer.toString()));
+    });
+    stream.on('end', function() {
+      callback(null, res[0]);
     });
   }
 
