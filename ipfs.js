@@ -2,7 +2,7 @@ var config = require('./config');
 var ipfsAPI = require('ipfs-api');
 var uuid = require('uuid');
 var async = require('async');
-
+var extend = require('extend');
 
 (function(ipfs) {
 
@@ -33,24 +33,21 @@ var async = require('async');
   }
 
 
-  ipfs.new_thread = function(prefix, thread, callback) {
-    // id which will use to store current head pointer in the DHT
+  ipfs.new_thread = function(prefix, thread_data, callback) {
+    // id which will be used to store current head pointer in the DHT
     var id = uuid.v4();
-    // use prefix for DHT key in order to not pollute
+    // use prefix for DHT key in order to not pollute namespace
     var key = dht_key(prefix, id);
-
     var now = new Date().getTime()/1000;
-    var data = {
+    extend(thread_data, {
       'id': id,
       'dht_prefix': prefix,
       'created_utc': now,
       'latest_utc': now,
-      'title': thread.title,
-      'content': thread.content,
       'comments': []
-    };
+    });
 
-    add(key, data, callback);
+    add(key, thread_data, callback);
   }
 
 
@@ -60,13 +57,12 @@ var async = require('async');
   }
 
 
-  ipfs.append_comment = function(prefix, thread_id, comment, callback) { 
+  ipfs.append_comment = function(prefix, thread_id, comment_data, callback) { 
     var now = new Date().getTime()/1000;
     var key = dht_key(prefix, thread_id);
-    var comment_data = {
+    extend(comment_data, {
       'created_utc': now,
-      'content': comment.content
-    };
+    });
     // Get old object, update with comment info, then update head pointer
     // in the DHT
     async.waterfall([
@@ -88,7 +84,7 @@ var async = require('async');
       function(thread, cb) {
         try {
           thread.comments.push(comment_data);
-          thread.latest = now;
+          thread.latest_utc = now;
           cb(null, thread);
         }
         catch(e) {

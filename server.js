@@ -44,13 +44,9 @@ app.get(config.api_base + 'thread', function(req, res) {
 })
 
 app.post(config.api_base + 'thread', function(req, res) {
-  var thread = {
-    'title': req.body.thread_title,
-    'content': req.body.thread_content
-  };
   ipfs.new_thread(
       req.body.dht_prefix,
-      thread,
+      req.body.thread,
       function(err, thread_data) {
         if (err) {
           return res.status(500).send({error: err});
@@ -61,13 +57,10 @@ app.post(config.api_base + 'thread', function(req, res) {
 })
 
 app.post(config.api_base + 'comment', function(req, res) {
-  var comment = {
-    'content': req.body.comment_content
-  };
   ipfs.append_comment(
       req.body.dht_prefix,
       req.body.thread_id,
-      comment,
+      req.body.comment,
       function(err, comment_data) {
         if (err) {
           return res.status(500).send({error: err});
