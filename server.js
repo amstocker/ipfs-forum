@@ -72,7 +72,7 @@ app.post(config.api_base + 'comment', function(req, res) {
 
 
 /**
- * Start server
+ * Start and listen
  **/
 var server = app.listen(config.port, function () {
   var host = server.address().address;
