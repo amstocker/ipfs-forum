@@ -81,8 +81,9 @@ var extend = require('extend');
           }
         });
       },
-      function(thread, cb) {
+      function(res, cb) {
         try {
+          var thread = res[0];
           thread.comments.push(comment_data);
           thread.latest_utc = now;
           cb(null, thread);
@@ -105,7 +106,7 @@ var extend = require('extend');
       res.push(JSON.parse(buffer.toString()));
     });
     stream.on('end', function() {
-      callback(null, res[0]);
+      callback(null, res);
     });
   }
 
