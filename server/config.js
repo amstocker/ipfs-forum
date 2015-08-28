@@ -8,7 +8,7 @@ exports = module.exports = {
   
   'enable_cors'             : true,
   'serve_static'            : false,
-  'static_folder'           : 'public',
+  'static_folder'           : '../webapp/public',
   'behind_reverse_proxy'    : true,
 
   'ipfs_host'               : 'localhost',
