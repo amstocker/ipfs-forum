@@ -38,16 +38,21 @@ app.use(bodyParser.urlencoded({
 /**
  * Routes
  **/
+function error_or_json(res) {
+  // return callback
+  return function(ipfs_err, ipfs_res) {
+    if (ipfs_err) {
+      return res.status(500).send({error: ipfs_err});
+    }
+    return res.json(ipfs_res);
+  }
+}
+
 app.get(config.api_base + 'thread', function(req, res) {
-  ipfs.get_thread_addr(
+  ipfs.get_thread_meta(
       req.body.dht_prefix,
       req.body.thread_id,
-      function(err, multihash) {
-        if (err) {
-          return res.status(500).send({error: err});
-        }
-        return res.json({'Hash': multihash});
-      }
+      error_or_json(res)
   );
 })
 
@@ -55,12 +60,7 @@ app.post(config.api_base + 'thread', function(req, res) {
   ipfs.new_thread(
       req.body.dht_prefix,
       req.body.thread,
-      function(err, thread_data) {
-        if (err) {
-          return res.status(500).send({error: err});
-        }
-        return res.json(thread_data);
-      }
+      error_or_json(res)
   );
 })
 
@@ -69,12 +69,7 @@ app.post(config.api_base + 'comment', function(req, res) {
       req.body.dht_prefix,
       req.body.thread_id,
       req.body.comment,
-      function(err, comment_data) {
-        if (err) {
-          return res.status(500).send({error: err});
-        }
-        return res.json(comment_data);
-      }
+      error_or_json(res)
   );
 })
 

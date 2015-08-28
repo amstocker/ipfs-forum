@@ -13,22 +13,28 @@ var extend = require('extend');
     return prefix + '::' + id;
   }
 
-  function add(key, data, callback) {
+  function update(key, thread, callback) {
     async.waterfall([
       // insert IPFS object
       function(cb) {
-        api.add(new Buffer(JSON.stringify(data)), cb);
+        api.add(new Buffer(JSON.stringify(thread)), cb);
       },
       // set current head pointer in DHT
       function(res, cb) {
-        api.dht.put(key, res[0].Hash, cb);
+        var metadata = {
+          'multihash': res[0].Hash,
+          'id': thread.id,
+          'created_utc': thread.created_utc,
+          'latest_utc': thread.latest_utc
+        }
+        api.dht.put(key, metadata, cb);
       },
       // test DHT get
       //function(res, cb) {
       //  api.dht.get(key, cb);
       //}
     ], function(err, res) {
-      callback(err, data);
+      callback(err, thread);
     });
   }
 
@@ -52,7 +58,7 @@ var extend = require('extend');
   }
 
 
-  ipfs.get_thread_addr = function(prefix, thread_id, callback) {
+  ipfs.get_thread_meta = function(prefix, thread_id, callback) {
     // attempt to get current head from DHT
     api.dht.get(dht_key(prefix, thread_id), callback);
   }
@@ -71,7 +77,8 @@ var extend = require('extend');
         api.dht.get(dht_key, cb);
       },
       function(res, cb) {
-        api.cat([res], function(err, res) {
+        var mh = JSON.parse(res).multihash;
+        api.cat([mh], function(err, res) {
           if (err || !res) {
             return cb(err, null);
           }
