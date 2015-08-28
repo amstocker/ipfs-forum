@@ -1,2 +1,3 @@
 git_rm_deleted_files
 *.swp
+webapp/public/js/bundle.js
