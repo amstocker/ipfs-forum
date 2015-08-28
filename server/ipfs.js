@@ -54,7 +54,7 @@ var extend = require('extend');
       'comments': []
     });
 
-    add(key, thread_data, callback);
+    update(key, thread_data, callback);
   }
 
 
@@ -101,7 +101,7 @@ var extend = require('extend');
         }
       },
       function(res, cb) {
-        add(key, res, cb);
+        update(key, res, cb);
       }
     ], function(err, res) {
       return callback(err, comment_data);
