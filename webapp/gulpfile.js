@@ -5,15 +5,22 @@ var browserify = require('gulp-browserify');
 var rename = require('gulp-rename');
 
 
-var MAIN = './public/jsx/main.jsx';
-var DEST = './public/js';
-var NAME = 'bundle.js';
+var SRC_JSX  = './src/jsx/**/*.jsx';
+var DEST_JSX = './src/js';
+var MAIN     = './src/js/main.js';
+var DEST     = './public/js';
+var NAME     = 'bundle.js';
 
 
-gulp.task('build', function() {
+gulp.task('jsx', function() {
+  return gulp.src(SRC_JSX)
+    .pipe(react())
+    .pipe(gulp.dest(DEST_JSX));
+});
+
+gulp.task('build', ['jsx'], function() {
   return gulp.src(MAIN)
     .pipe(browserify())
-    .pipe(react())
     .pipe(uglify())
     .pipe(rename(NAME))
     .pipe(gulp.dest(DEST));
