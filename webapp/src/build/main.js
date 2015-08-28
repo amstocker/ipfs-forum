@@ -29,6 +29,6 @@ post(TEST_API + 'thread', data, function(res) {console.log(res)});
 
 
 React.render(
-  <h1>Hello, nerds!!!!</h1>,
+  React.createElement("h1", null, "Hello, nerds!!!!"),
   document.getElementById('container')
 );

@@ -7,8 +7,8 @@ var rename = require('gulp-rename');
 
 var MAIN_JSX = './src/jsx/main.jsx';
 var SRC_JSX  = './src/jsx/**/*.jsx';
-var DEST_JSX = './src/js';
-var MAIN     = './src/js/main.js';
+var DEST_JSX = './src/build';
+var MAIN     = './src/build/main.js';
 var DEST     = './public/js';
 var NAME     = 'bundle.js';
 
