@@ -5,6 +5,7 @@ var browserify = require('gulp-browserify');
 var rename = require('gulp-rename');
 
 
+var MAIN_JSX = './src/jsx/main.jsx';
 var SRC_JSX  = './src/jsx/**/*.jsx';
 var DEST_JSX = './src/js';
 var MAIN     = './src/js/main.js';
@@ -27,7 +28,7 @@ gulp.task('build', ['jsx'], function() {
 });
 
 gulp.task('watch', function() {
-  gulp.watch(MAIN, ['build']);
+  gulp.watch(MAIN_JSX, ['build']);
 });
 
 gulp.task('default', ['watch', 'build']);

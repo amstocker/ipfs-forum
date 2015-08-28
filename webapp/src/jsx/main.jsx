@@ -1,6 +1,6 @@
 var React = require('react');
 
 React.render(
-  <h1>Hello, world!</h1>,
+  <h1>Hello, nerds!!!!</h1>,
   document.getElementById('container')
 );
