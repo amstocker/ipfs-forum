@@ -20,11 +20,19 @@ gulp.task('jsx', function() {
 });
 
 gulp.task('build', ['jsx'], function() {
-  return gulp.src(MAIN)
+  gulp.src(MAIN)
     .pipe(browserify())
     .pipe(uglify())
     .pipe(rename(NAME))
     .pipe(gulp.dest(DEST));
+  return ipfs.add(['public'], {'recursive':true}, function(err, res) {
+    if(err || !res) return console.error(err)
+    res.forEach(function(file) {
+        if (file.Name == 'public') {
+          console.log('webapp multihash:', file.Hash);
+        }
+    })
+  });
 });
 
 gulp.task('watch', function() {

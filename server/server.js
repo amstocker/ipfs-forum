@@ -49,6 +49,8 @@ function error_or_json(res) {
 }
 
 app.get(config.api_base + 'thread', function(req, res) {
+  console.log('GET /thread');
+  console.log(req.body);
   ipfs.get_thread_meta(
       req.body.dht_prefix,
       req.body.thread_id,
@@ -57,6 +59,8 @@ app.get(config.api_base + 'thread', function(req, res) {
 })
 
 app.post(config.api_base + 'thread', function(req, res) {
+  console.log('POST /thread');
+  console.log(req.body);
   ipfs.new_thread(
       req.body.dht_prefix,
       req.body.thread,
@@ -65,6 +69,8 @@ app.post(config.api_base + 'thread', function(req, res) {
 })
 
 app.post(config.api_base + 'comment', function(req, res) {
+  console.log('POST /comment');
+  console.log(req.body);
   ipfs.append_comment(
       req.body.dht_prefix,
       req.body.thread_id,
@@ -83,3 +89,9 @@ var server = app.listen(config.port, function () {
 
   console.log('Listening at: http://%s:%s', host, port);
 });
+
+
+/**
+ * Schedule IPFS repo garbage collection
+ **/
+setInterval(ipfs.repo_gc, config.ipfs_repo_gc_interval * 60 * 1000);

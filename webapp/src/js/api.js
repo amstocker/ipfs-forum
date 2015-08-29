@@ -71,7 +71,7 @@ var config = require('./config');
     );
   }
 
-  function json(method, url, object, s, e) {
+  function json(method, url, object, ok, err) {
     xhr = new(this.XMLHttpRequest || ActiveXObject)('MSXML2.XMLHTTP.3.0');
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4) {
@@ -82,9 +82,9 @@ var config = require('./config');
           } catch(e) {
             res = xhr.responseText;
           }
-          return s(res, xhr);
+          return ok(res, xhr);
         }
-        return e(xhr);
+        return err(xhr);
       }
     }
     xhr.open(method, url, true);

@@ -13,4 +13,5 @@ exports = module.exports = {
 
   'ipfs_host'               : 'localhost',
   'ipfs_port'               : 5001,
+  'ipfs_repo_gc_interval'   : 10 /* minutes */
 }
