@@ -8,7 +8,7 @@ var config = require('./config');
       if (err) {
         return callback(err, null, xhr);
       }
-      gateway_json(res.multihash, callback);
+      return gateway_json(res.multihash, callback);
     });
   }
 
@@ -52,15 +52,14 @@ var config = require('./config');
   function api_req(method, path, object, callback) {
     json(method, config.api_base + path, object,
       function(res, xhr) {
-        callback(null, res, xhr);
+        return callback(null, res, xhr);
       },
       function(xhr) {
-        callback(xhr.status, null, xhr);
+        return callback(xhr.status, null, xhr);
       }
     );
   }
 
-  
   function gateway_json(multihash, callback) {
     json('GET', config.gateway_base + multihash, null,
       function(res, xhr) {
@@ -71,7 +70,6 @@ var config = require('./config');
       }
     );
   }
-
 
   function json(method, url, object, s, e) {
     xhr = new(this.XMLHttpRequest || ActiveXObject)('MSXML2.XMLHTTP.3.0');
