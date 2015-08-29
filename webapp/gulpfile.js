@@ -3,7 +3,7 @@ var react = require('gulp-react');
 var uglify = require('gulp-uglify');
 var browserify = require('gulp-browserify');
 var rename = require('gulp-rename');
-
+var ipfs = require('ipfs-api')('localhost', 5001);
 
 var MAIN_JSX = './src/jsx/main.jsx';
 var SRC_JSX  = './src/jsx/**/*.jsx';

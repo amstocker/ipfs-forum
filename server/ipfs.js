@@ -21,12 +21,12 @@ var extend = require('extend');
       },
       // set current head pointer in DHT
       function(res, cb) {
-        var metadata = {
+        var metadata = JSON.stringify({
           'multihash': res[0].Hash,
           'id': thread.id,
           'created_utc': thread.created_utc,
           'latest_utc': thread.latest_utc
-        }
+        });
         api.dht.put(key, metadata, cb);
       },
       // test DHT get
@@ -60,7 +60,9 @@ var extend = require('extend');
 
   ipfs.get_thread_meta = function(prefix, thread_id, callback) {
     // attempt to get current head from DHT
-    api.dht.get(dht_key(prefix, thread_id), callback);
+    api.dht.get(dht_key(prefix, thread_id), function(err, res) {
+      callback(err, JSON.parse(res));
+    });
   }
 
 
