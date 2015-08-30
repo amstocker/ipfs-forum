@@ -1,4 +1,6 @@
 body {
+  width: 1100px;
+  margin: auto;
   padding: 4px;
 }
 
@@ -18,4 +20,12 @@ body {
   margin-left: 50px;
   padding: 4px;
   background: #ddd;
+}
+
+.ApiError {
+  width: 300px;
+  height: 300px;
+  margin: auto;
+  padding: 4px;
+  background: #faa;
 }
