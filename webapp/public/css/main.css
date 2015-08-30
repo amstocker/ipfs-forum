@@ -1,0 +1,21 @@
+body {
+  padding: 4px;
+}
+
+.Thread {
+  padding: 4px;
+  background: #eee;
+}
+
+.Header {
+  margin: 4px;
+  padding: 4px;
+  background: #ddd;
+}
+
+.Comment {
+  margin: 4px;
+  margin-left: 50px;
+  padding: 4px;
+  background: #ddd;
+}

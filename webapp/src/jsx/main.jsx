@@ -1,25 +1,23 @@
 var React = require('react');
 var api = require('../js/api');
 var config = require('../js/config');
+var component = require('./component');
 
 
-api.new_thread({'content':'TESTER McTESTERSON'}, function(err, res) {
-  api.get_thread(res.id, function(err, res) {
-    if (err) {console.log(err)}
-    console.log('GET TEST', res);
-    api.new_comment(res.id, {'content':'TESTY TESTERS'}, function(err, res) {
-      if (err) {console.log(err)}
-      console.log('COMMENT TEST', res);
-      api.get_thread(res.id, function(err, res) {
-        if (err) {console.log(err)}
-        console.log('GET TEST', res);
-      });
-    });
-  });
+var test = {
+  'title': "too much netflix",
+  'content': "TEST TEST TEST"
+}
+
+api.new_thread(test, function(err, res) {
+  if (err) {
+    return console.log(err);
+  }
+
+  window.location.hash = res.id;
+  
+  React.render(
+    <component.App />,
+    document.getElementById('container')
+  );
 });
-
-
-React.render(
-  <h1>Hello, nerds!!!!</h1>,
-  document.getElementById('container')
-);
