@@ -1,0 +1,21 @@
+{
+  "name": "ipfs-forum",
+  "version": "0.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "async": "~1.4.2",
+    "body-parser": "~1.13.3",
+    "express": "~4.13.3",
+    "extend": "~3.0.0",
+    "ipfs-api": "~2.2.1",
+    "uuid": "~2.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Andrew Stocker",
+  "license": "BSD-2-Clause"
+}

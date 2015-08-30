@@ -1,0 +1,21 @@
+{
+  "name": "ipfs-forum",
+  "version": "0.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp": "~3.9.0",
+    "gulp-browserify": "~0.5.1",
+    "gulp-react": "~3.0.1",
+    "gulp-rename": "~1.2.2",
+    "gulp-uglify": "~1.4.0",
+    "ipfs-api": "~2.3.0",
+    "react": "~0.13.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrew Stocker",
+  "license": "BSD-2-Clause"
+}
