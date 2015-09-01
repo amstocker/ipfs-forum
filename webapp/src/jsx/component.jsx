@@ -30,10 +30,20 @@ var utils = require('../js/utils');
         }.bind(this));
       }
     },
+    submitHandler: function(comment) {
+      if (this.state.thread) {
+        api.new_comment(this.state.thread.id, comment, function(err, res) {
+          if (err) {
+            return console.log(err);
+          }
+          window.location.reload();
+        });
+      }
+    },
     render: function() {
       if (this.state.thread) {
         return (
-          <Thread data={this.state.thread} />
+          <Thread data={this.state.thread} submitHandler={this.submitHandler} />
         );
       }
       return (
@@ -46,14 +56,15 @@ var utils = require('../js/utils');
 
   var Thread = component.Thread = React.createClass({
     render: function() {
-      var commentList = this.props.data.comments.map(function(comment) {
+      var commentList = this.props.data.comments.map(function(comment, index) {
         return (
-          <Comment data={comment} />
+          <Comment key={index} data={comment} />
         );
       });
       return (
         <div className="Thread">
-          <Header data={this.props.data} />
+          <ThreadHeader data={this.props.data} />
+          <ReplyBox submitHandler={this.props.submitHandler} />
           {commentList}
         </div>
       );
@@ -61,12 +72,12 @@ var utils = require('../js/utils');
   });
 
 
-  var Header = component.Header = React.createClass({
+  var ThreadHeader = component.ThreadHeader = React.createClass({
     render: function() {
       return (
-        <div className="Header">
-          <div>{"created: " + utils.unix2date(this.props.data.created_utc)}</div>
-          <div>{"content: " + this.props.data.content}</div>
+        <div className="ThreadHeader">
+          <div><i>{"created: " + utils.unix2date(this.props.data.created_utc)}</i></div>
+          <div>{this.props.data.content}</div>
         </div>
       );
     }
@@ -77,16 +88,60 @@ var utils = require('../js/utils');
     render: function() {
       return (
         <div className="Comment">
-          <div>{"created: " + utils.unix2date(this.props.data.created_utc)}</div>
-          <div>{"content: " + this.props.data.content}</div>
+          <CommentHeader data={this.props.data} />
+          <div>{this.props.data.content}</div>
         </div>
       );
     }
   });
 
 
-  //var ReplyBox = component.ReplyBox = React.createClass({
-  //});
+  var CommentHeader = component.CommentHeader = React.createClass({
+    render: function() {
+      return (
+        <div className="CommentHeader">
+          <i>{"created: " + utils.unix2date(this.props.data.created_utc)}</i>
+        </div>
+      );
+    }
+  });
+
+
+  var ReplyBox = component.ReplyBox = React.createClass({
+    getInitialState: function() {
+      return {
+        visible: false
+      };
+    },
+    toggleVisiblity: function(e) {
+      return this.setState({
+        visible: !this.state.visible
+      });
+    },
+    handler: function(e) {
+      e.preventDefault();
+      var content = React.findDOMNode(this.refs.content).value.trim();
+      if (!content) {
+        return;
+      }
+      this.props.submitHandler({content: content});
+    },
+    render: function() {
+      console.log(this.state);
+      if (!this.state.visible) {
+        return (
+          <input type="button" onClick={this.toggleVisibility} value="Reply" />
+        );
+      }
+      return (
+        <form className="ReplyBox" onSubmit={this.handler}>
+          <textarea rows="4" cols="50" ref="content" />
+          <input type="submit" value="Post" />
+        </form> 
+      )
+    }
+  });
+
 
   var ApiError = component.ApiError = React.createClass({
     render: function() {
@@ -98,5 +153,6 @@ var utils = require('../js/utils');
       );
     }
   });
+
 
 })(module.exports)

@@ -4,20 +4,10 @@ var config = require('../js/config');
 var component = require('./component');
 
 
-var test = {
-  'title': "too much netflix",
-  'content': "TEST TEST TEST"
-}
+console.log('#26d9d8aa-19b5-4bad-85c8-6b8865a3bb89');
 
-api.new_thread(test, function(err, res) {
-  if (err) {
-    return console.log(err);
-  }
-
-  window.location.hash = res.id;
   
-  React.render(
-    <component.App />,
-    document.getElementById('container')
-  );
-});
+React.render(
+  <component.App />,
+  document.getElementById('container')
+);
