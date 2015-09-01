@@ -32,18 +32,21 @@ gulp.task('build', ['jsx'], function() {
     .pipe(uglify())
     .pipe(rename(NAME))
     .pipe(gulp.dest(DEST));
-  //return ipfs.add(['public'], {'recursive':true}, function(err, res) {
-  //  if(err || !res) return console.error(err)
-  //  res.forEach(function(file) {
-  //      if (file.Name == 'public') {
-  //        console.log('webapp multihash:', file.Hash);
-  //      }
-  //  })
-  //});
+});
+
+gulp.task('publish', ['build'], function() {
+  return ipfs.add(['public'], {'recursive':true}, function(err, res) {
+    if(err || !res) return console.error(err)
+    res.forEach(function(file) {
+        if (file.Name == 'public') {
+          console.log('webapp multihash:', file.Hash);
+        }
+    })
+  });
 });
 
 //gulp.task('watch', function() {
 //  gulp.watch(SRC_JSX, ['jsx', 'build']);
 //});
 
-gulp.task('default', ['build']);
+gulp.task('default', ['publish']);
